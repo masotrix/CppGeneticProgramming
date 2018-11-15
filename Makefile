@@ -7,7 +7,7 @@ GPDEPS= src/GP.h
 GPOBJ= src/GP.o
 ARRAYSSRC= src/Arrays
 ARRAYSOBJ= $(GPOBJ) $(ARRAYSSRC)/testArrays.o
-ARRAYSBUILD= build/buildArrays
+ARRAYSBUILD= build/Arrays
 
 all: \
 	builddir \
