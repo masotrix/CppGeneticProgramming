@@ -22,7 +22,7 @@
   - Ejecutables solo disponibles luego de compilación
   - Makefile asume ambiente Unix (se espera generalizar en versión posterior)
 
-## Ejercicio 1 (Adivinar secuencias de bits y carácteres)
+## Ejercicio 1 (Adivinar secuencias de bits y de carácteres)
 
 Implementación: 
   - /src/Arrays/testArrays.cpp
@@ -31,4 +31,4 @@ Ejecutable:
   - /build/Arrays/testArrays
 
 Conclusiones:
-  - Las secuencias de caracteres tardan muchísimo más en converger que las secuencias debits.
+  - Las secuencias de caracteres tardan muchísimo más en converger que las secuencias de bits.
