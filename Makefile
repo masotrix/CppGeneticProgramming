@@ -16,6 +16,9 @@ ASTOBJ= $(ASTSRC)/AST.o
 GPOBJ= $(ASTOBJ) src/GP.o
 ASTTESTOBJ= $(ASTOBJ) $(ASTSRC)/testAst.o
 ARRAYSOBJ= $(GPOBJ) $(ARRAYSSRC)/testArrays.o
+GPTESTSTASKTWOOBJ= $(GPOBJ) $(PLOTOBJ)  \
+							$(TSPSRC)/hull.o $(TSPSRC)/mst.o\
+							$(ARRAYSSRC)/testsTask2.o
 GPTASKTWOOBJ= $(GPOBJ) $(PLOTOBJ)  \
 							$(TSPSRC)/hull.o $(TSPSRC)/mst.o\
 							$(ARRAYSSRC)/task2.o
@@ -26,7 +29,8 @@ all: \
 	$(ASTBUILD)/testAst \
 	arraysdir \
 	$(ARRAYSBUILD)/testArrays \
-	$(ARRAYSBUILD)/task2
+	$(ARRAYSBUILD)/task2 \
+	$(ARRAYSBUILD)/testsTask2
 
 
 %.o: %.cpp $(GPDEPS)
@@ -48,6 +52,8 @@ arraysdir:
 $(ARRAYSBUILD)/testArrays: $(ARRAYSOBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
 $(ARRAYSBUILD)/task2: $(GPTASKTWOOBJ)
+	$(CC) $^ -o $@ $(CFLAGS)
+$(ARRAYSBUILD)/testsTask2: $(GPTESTSTASKTWOOBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
 
 

@@ -56,18 +56,17 @@ pair<vector<vector<float>>,float> hullRun(string filename) {
   in = vector<bool>();
   v = vector<pair<double,double>>();
 
-  int du, i, j, n, pos;
+  int du, i, j, n=0, pos;
   double x, y, d, sum = 0;
 
-  n = 25;
-      
   // Get vertex
   ifstream nodefile(filename);
-  for (i = 0; i < n; i++) {
+  while (nodefile>>x) {
     
-    nodefile >> x >> y;
+    nodefile >> y;
     v.push_back(make_pair(x,y));
     in.push_back(false);
+    n++;
   }
   nodefile.close();
 

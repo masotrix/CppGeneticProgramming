@@ -15,15 +15,19 @@ int main() {
     bool verbose = false;
     auto ga = make_unique<FindBitArrayGA>(members,bits);
     cout << "FindBitArray example\n";
-    int ites = ga->evolve(mutRate,tSize);
+    cout << "[P:"<<members<<", B:"<<bits
+      <<", MR: "<<mutRate<<"]\n";
+    int ites = ga->evolve(mutRate,tSize,9999,true).size();
     cout << "Needed ites: " << ites << endl << endl;
   }
   {
-    int members=30, bits=3, tSize=10; double mutRate = 0.2;
+    int members=30, bits=20, tSize=10; double mutRate = 0.2;
     bool verbose = false;
     auto ga = make_unique<FindCharArrayGA>(members,bits);
     cout << "FindCharArray example\n";
-    int ites = ga->evolve(mutRate,tSize);
+    cout << "[P:"<<members<<", B:"<<bits
+      <<", MR: "<<mutRate<<"]\n";
+    int ites = ga->evolve(mutRate,tSize,9999999,true).size();
     cout << "Needed ites: " << ites << endl << endl;
   }
   {/*
@@ -34,13 +38,13 @@ int main() {
     int ites = ga->evolve(mutRate,ktil,epochs,verbose);
     cout << "Needed ites: " << ites << endl << endl;*/
   }
-  {
+  {/*
     int members=100, bits=25, ktil=2, epochs=100;
     double mutRate=0.5; bool verbose = true;
     auto ga = make_unique<FindTravelerGA>(members,bits,
         string("cities/cities1.txt"));
     cout << "FindTravel example\n";
-    int ites = ga->evolve(mutRate,ktil,epochs,verbose);
-    cout << "Needed ites: " << ites << endl << endl;
+    int ites = ga->evolve(mutRate,ktil,epochs,verbose).size();
+    cout << "Needed ites: " << ites << endl << endl;*/
   }
 }

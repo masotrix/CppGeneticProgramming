@@ -73,7 +73,7 @@ class GeneticAlgorithm {
   protected:
     std::vector<std::unique_ptr<T>> _members;
     float _minFitness;
-    int _epochs; double _std;
+    int _epochs; double _std,_avg;
   public:
     virtual int select(int k,
         std::function<bool(float,float)> comp =
@@ -81,7 +81,8 @@ class GeneticAlgorithm {
     virtual float evaluate()=0;
     virtual void print(int i);
     virtual void reproduce(double mutRate, int rounds)=0;
-    virtual int evolve(double mutRate, int tournametSize,
+    virtual std::vector<double> 
+      evolve(double mutRate, int tournametSize,
         int epochs=std::numeric_limits<int>::max(),
         bool verbose=false);
     virtual float getMinFitness();
@@ -92,6 +93,7 @@ class ArrayGA: public GeneticAlgorithm<K> {
     std::vector<T> _perfectArray;
     int _options;
   public:
+    ArrayGA();
     ArrayGA(int N, int B, int ops);
     ArrayGA(int N, int B);
     virtual float evaluate() override;

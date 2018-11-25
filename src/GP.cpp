@@ -47,17 +47,19 @@ void GeneticAlgorithm<T>::print(int i) {
   this->_members[i]->print();
 }
 template <class T>
-int GeneticAlgorithm<T>::evolve(double mutRate, int tourSize,
-    int epochs, bool verbose) {
-  float evalRes;
+vector<double> GeneticAlgorithm<T>::evolve(double mutRate,
+    int tourSize, int epochs, bool verbose) {
+  float evalRes; vector<double> avgs;
   for (int k=0;k<epochs;k++) {
     _epochs = k+1;
     evalRes = evaluate();
+    avgs.push_back(this->_avg);
     if (evalRes!=-1.f || k==epochs-1) break;
     if (verbose && k%(epochs/10)==0) {
-      cout << _epochs << ": MinFit: " << _minFitness 
-          << ", StdFit: " << _std << endl;
+      /*cout << _epochs << ": MinFit: " << _minFitness 
+          << ", StdFit: " << _std << endl;*/
     }
+
     reproduce(mutRate,tourSize);
   }
   if (verbose) {
@@ -65,7 +67,7 @@ int GeneticAlgorithm<T>::evolve(double mutRate, int tourSize,
     cout << "Final fitness: " << 
       this->_members[0]->getFitness() << endl;
   }
-  return _epochs;
+  return avgs;
 }
 
 AstGA::AstGA(int N, function<float(float)> perfect,
@@ -110,6 +112,8 @@ float AstGA::evaluate() {
         return (a->getFitness() < b->getFitness());});
   return -1.f;
 }
+template <class T, class K>
+ArrayGA<T,K>::ArrayGA() {}
 template <class T, class K>
 ArrayGA<T,K>::ArrayGA(int N, int B): ArrayGA<T,K>(N,B,B) {}
 template <class T, class K>
@@ -169,8 +173,17 @@ void ArrayGA<T,K>::reproduce(double mutRate, int tourRounds) {
 FindBitArrayGA::FindBitArrayGA(int N, int B): 
   ArrayGA<bool,BitArrayMember>(N,B,2) {
 }
-FindCharArrayGA::FindCharArrayGA(int N, int B): 
-  ArrayGA<char,CharArrayMember>(N,B,256) {
+FindCharArrayGA::FindCharArrayGA(int N, int B)//: 
+//  ArrayGA<char,CharArrayMember>(N,B,256) {
+//}
+{
+  for (int i=0; i<N; i++) {
+    auto mem = make_unique<CharArrayMember>(B);
+    this->_members.push_back(move(mem));
+  }
+  uniform_int_distribution<int> option(97,122);
+  _perfectArray = vector<char>(B);
+  for (int i=0; i<B; i++) _perfectArray[i] = option(gen);
 }
 FindTravelerGA::FindTravelerGA(int N, int B, string filename):
   ArrayGA<int,TravelMember>(N,B),
@@ -197,7 +210,7 @@ vector<vector<float>> FindTravelerGA::getOptPoints() {
 }
 float FindTravelerGA::evaluate() {
   int B = this->_members[0]->getArray().size();
-  double varN=0; long totFit=0;
+  double varN=0; double totFit=0; this->_avg=0;
   float minFit = numeric_limits<float>::max();
   for (int i=0; i<this->_members.size(); i++) {
     float fitness = 0;
@@ -213,10 +226,10 @@ float FindTravelerGA::evaluate() {
     minFit = min(minFit,fitness);
     this->_members[i]->setFitness(fitness);
 
-    double prevAvg = i? ((double)totFit)/i:0;
     totFit += fitness;
-    double curAvg = ((double)totFit)/(i+1);
-    varN += (fitness-prevAvg)*(fitness-curAvg);
+    double curAvg = totFit/(i+1);
+    varN += (fitness-this->_avg)*(fitness-curAvg);
+    this->_avg = curAvg;
   }
   _std = sqrt(varN/_epochs);
   _minFitness = minFit;

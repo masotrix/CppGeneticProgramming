@@ -77,27 +77,27 @@ vector<RepSet*> the_setList;
 vector<RepSet*>* RepSet::setList = &the_setList;
 
 pair<vector<vector<float>>,float> mstRun(string filename) {
-// Global Variables
 
-int du, i, j, u, v, n;
-double x, y, d, sum = 0;
+  int du, i, j, u, v, n=0;
+  double x, y, d, sum = 0;
 
-    n = 25;
-    RepSet::initSets(n);
     
 
     // Get vertex
 
     ifstream nodefile(filename);
 
-    for (i = 0; i < n; i++){
-      nodefile >> x >> y;
-      vertex.push_back( make_pair(x,y) );
+    while (nodefile>>x){
+      nodefile >>  y;
+      vertex.push_back(make_pair(x,y));
       vis.push_back( false );
       neighbors.push_back(vector<int>());
+      n++;
     }
     nodefile.close();
 
+
+    RepSet::initSets(n);
     // Create edges
 
     for (i = 0; i < n-1; i++){
