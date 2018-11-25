@@ -32,3 +32,8 @@ Ejecutable:
 
 Conclusiones:
   - Las secuencias de caracteres tardan muchísimo más en converger que las secuencias de bits.
+  
+## Tarea 2 (Genetic TSP)
+
+Informe:
+  - /Task2__Develop_TSP_Genetic_Algorithm.pdf
