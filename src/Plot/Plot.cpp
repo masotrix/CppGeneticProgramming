@@ -15,6 +15,14 @@ static const Scalar textCol = Scalar::all(90);
 static const Scalar deleteCol = Scalar::all(255);
 static const Scalar axesCol = Scalar::all(170);
 static const Scalar vanishCol = Scalar::all(220);
+static Scalar graphColors[] = {
+  Scalar(0,0,255),
+  Scalar(255,0,0),
+  Scalar(0,255,0),
+  Scalar(255,255,0),
+  Scalar(255,0,255)
+};
+
 
 Plot::Plot():
   _xticks(4), _yticks(4),
@@ -29,11 +37,12 @@ void Plot::setYLabelRotate(bool rotate) {
   _ylabelRotate = rotate;}
 
 
-void Plot::addPlotData(vector<vector<float>> X,
-    const Scalar &color, bool style) {
 
+void Plot::addPlotData(vector<vector<float>> X,
+    bool style) {
+
+  _colors.push_back(graphColors[_plotData.size()]);
   _plotData.push_back(X);
-  _colors.push_back(color);
   _styles.push_back(style);
 }
 
@@ -84,7 +93,8 @@ Mat Plot::generatePlot() {
         p1.x*=xscale; p1.y*=yscale; p2.x*=xscale; p2.y*=yscale;
         p1+=origin; p2+=origin; 
       
-        line(chart, (Point)p1, (Point)p2, _colors[k], 1, CV_AA);
+        line(chart, (Point)p1, (Point)p2,
+            _colors[k], 1, CV_AA);
       }
       for (int i=0; i<_plotData[k].size(); i++) {
         Point2f p(_plotData[k][i][0],-_plotData[k][i][1]);

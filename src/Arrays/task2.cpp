@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
     unique_ptr<FindTravelerGA> ga;
     vector<vector<float>> points;
     vector<double> avgs; vector<vector<float>> avgCoords;
-    float minFitness, maxAvg;
+    float minLength, maxAvg;
     double duration;
 
     stringstream ssac; ssac.str(string());
@@ -51,9 +51,9 @@ int main(int argc, char **argv) {
    
     start = chrono::system_clock::now();
     ga = make_unique<FindTravelerGA>(members,cities,filename);
-    avgs = ga->evolve(mutRate,popDivision,epochs,verbose);
+    avgs = ga->evolve(mutRate,epochs,verbose,popDivision);
     end = chrono::system_clock::now(); seconds = end-start;
-    minFitness = ga->getMinFitness();
+    minLength = ga->getMinFitness();
     duration = seconds.count();
 
     points = ga->getOptPoints(); 
@@ -66,11 +66,11 @@ int main(int argc, char **argv) {
 
     {
       shared_ptr<Plot> evoChart(new Plot());
-      evoChart->addPlotData(avgCoords, Scalar(255,0,0), false);
+      evoChart->addPlotData(avgCoords, false);
       evoChart->setTicks(4,4);
       evoChart->setXLabel("Epoch");
       evoChart->setYLabel("Distance");
-      ssac << minFitness; ssec << duration;
+      ssac << minLength; ssec << duration;
       evoChart->setTitle(string("Avg Distance vs Epoch"));
       ssac.str(string()); ssec.str(string());
       evoChart->setLimits({0,(float)avgs.size(),0,maxAvg});
@@ -78,11 +78,11 @@ int main(int argc, char **argv) {
     }
     {
       shared_ptr<Plot> cityChart(new Plot());
-      cityChart->addPlotData(points, Scalar(255,0,0));
+      cityChart->addPlotData(points);
       cityChart->setTicks(4,4);
       cityChart->setXLabel("X"); cityChart->setYLabel("Y");
       cityChart->setYLabelRotate(false);
-      ssac << minFitness; ssec << duration;
+      ssac << minLength; ssec << duration;
       cityChart->setTitle(
           string("Genetic TSP ")+
           string("[D:")+ssac.str()+
@@ -95,16 +95,16 @@ int main(int argc, char **argv) {
       start = chrono::system_clock::now();
       tie(points,sum) = mstRun(filename);
       end = chrono::system_clock::now(); seconds = end-start;
-      minFitness = sum;
+      minLength = sum;
       duration = seconds.count();
       points.push_back(points[0]);
 
       shared_ptr<Plot> cityChart(new Plot());
-      cityChart->addPlotData(points, Scalar(255,0,0));
+      cityChart->addPlotData(points);
       cityChart->setTicks(4,4);
       cityChart->setXLabel("X"); cityChart->setYLabel("Y");
       cityChart->setYLabelRotate(false);
-      ssac << minFitness; ssec << duration;
+      ssac << minLength; ssec << duration;
       cityChart->setTitle(
           string("MST TSP ")+
           string("[D:")+ssac.str()+
@@ -117,16 +117,16 @@ int main(int argc, char **argv) {
       start = chrono::system_clock::now();
       tie(points,sum) = hullRun(filename);
       end = chrono::system_clock::now(); seconds = end-start;
-      minFitness = sum;
+      minLength = sum;
       duration = seconds.count();
       points.push_back(points[0]);
 
       shared_ptr<Plot> cityChart(new Plot());
-      cityChart->addPlotData(points, Scalar(255,0,0));
+      cityChart->addPlotData(points);
       cityChart->setTicks(4,4);
       cityChart->setXLabel("X"); cityChart->setYLabel("Y");
       cityChart->setYLabelRotate(false);
-      ssac << minFitness; ssec << duration;
+      ssac << minLength; ssec << duration;
       cityChart->setTitle(
           string("Convex Hull TSP ")+
           string("[D:")+ssac.str()+

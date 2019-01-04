@@ -14,7 +14,8 @@ GPDEPS= src/GP.h src/Plot/Plot.h src/Arrays/TSP/TSP.h
 PLOTOBJ= src/Plot/Plot.o
 ASTOBJ= $(ASTSRC)/AST.o
 GPOBJ= $(ASTOBJ) src/GP.o
-ASTTESTOBJ= $(ASTOBJ) $(ASTSRC)/testAst.o
+ASTTESTOBJ= $(GPOBJ) $(ASTOBJ) $(ASTSRC)/testAst.o
+TASK3OBJ= $(GPOBJ) $(ASTOBJ) $(PLOTOBJ) $(ASTSRC)/task3.o
 ARRAYSOBJ= $(GPOBJ) $(ARRAYSSRC)/testArrays.o
 GPTESTSTASKTWOOBJ= $(GPOBJ) $(PLOTOBJ)  \
 							$(TSPSRC)/hull.o $(TSPSRC)/mst.o\
@@ -27,6 +28,7 @@ all: \
 	builddir \
 	astdir \
 	$(ASTBUILD)/testAst \
+	$(ASTBUILD)/task3 \
 	arraysdir \
 	$(ARRAYSBUILD)/testArrays \
 	$(ARRAYSBUILD)/task2 \
@@ -44,6 +46,8 @@ astdir:
 	${MKDIR_P} \
   $(ASTBUILD)
 $(ASTBUILD)/testAst: $(ASTTESTOBJ)
+	$(CC) $^ -o $@ $(CFLAGS)
+$(ASTBUILD)/task3: $(TASK3OBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
 
 arraysdir: 

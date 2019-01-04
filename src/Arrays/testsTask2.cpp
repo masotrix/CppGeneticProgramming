@@ -27,7 +27,7 @@ int main() {
     double mutRate=0.5;
     unique_ptr<FindTravelerGA> ga[4];
     vector<vector<float>> points[4];
-    float minFitness[4];
+    float minLength[4];
     double duration[4];
     int tests=100;
 
@@ -55,9 +55,9 @@ int main() {
         start = chrono::system_clock::now();
         ga[k] = make_unique<FindTravelerGA>(members[k],cities,
             string("cities/cities")+to_string(i)+string(".txt"));
-        ga[k]->evolve(mutRate,popDivision,epochs,verbose);
+        ga[k]->evolve(mutRate,epochs,verbose,popDivision);
         end = chrono::system_clock::now(); seconds = end-start;
-        minFitness[k] += ga[k]->getMinFitness();
+        minLength[k] += ga[k]->getMinFitness();
         duration[k] += seconds.count();
         if (i%25==0) {cout <<i<<"% "; cout.flush();}
       }
@@ -65,15 +65,15 @@ int main() {
 
       points[k] = ga[k]->getOptPoints(); 
       points[k].push_back(points[k][0]);
-      minFitness[k] /= tests;
+      minLength[k] /= tests;
       duration[k] /= tests;
 
       shared_ptr<Plot> cityChart(new Plot());
-      cityChart->addPlotData(points[k], Scalar(255,0,0));
+      cityChart->addPlotData(points[k]);
       cityChart->setTicks(4,4);
       cityChart->setXLabel("X"); cityChart->setYLabel("Y");
       cityChart->setYLabelRotate(false);
-      ssac << minFitness[k]; ssec << duration[k];
+      ssac << minLength[k]; ssec << duration[k];
       cityChart->setTitle(
           string("Population: ")+to_string(members[k])+
           string(" [D:")+ssac.str()+
@@ -99,7 +99,7 @@ int main() {
     double mutRate=0.5;
     unique_ptr<FindTravelerGA> ga[4];
     vector<vector<float>> points[4];
-    float minFitness[4];
+    float minLength[4];
     double duration[4];
     int tests=100;
 
@@ -127,9 +127,9 @@ int main() {
         start = chrono::system_clock::now();
         ga[k] = make_unique<FindTravelerGA>(members[k],cities,
             string("cities/cities")+to_string(i)+string(".txt"));
-        ga[k]->evolve(mutRate,popDivision[k],epochs[k],verbose);
+        ga[k]->evolve(mutRate,epochs[k],verbose,popDivision[k]);
         end = chrono::system_clock::now(); seconds = end-start;
-        minFitness[k] += ga[k]->getMinFitness();
+        minLength[k] += ga[k]->getMinFitness();
         duration[k] += seconds.count();
         if (i%25==0) {cout <<i<<"% "; cout.flush();}
       }
@@ -137,15 +137,15 @@ int main() {
 
       points[k] = ga[k]->getOptPoints(); 
       points[k].push_back(points[k][0]);
-      minFitness[k] /= tests;
+      minLength[k] /= tests;
       duration[k] /= tests;
 
       shared_ptr<Plot> cityChart(new Plot());
-      cityChart->addPlotData(points[k], Scalar(255,0,0));
+      cityChart->addPlotData(points[k]);
       cityChart->setTicks(4,4);
       cityChart->setXLabel("X"); cityChart->setYLabel("Y");
       cityChart->setYLabelRotate(false);
-      ssac << minFitness[k]; ssec << duration[k];
+      ssac << minLength[k]; ssec << duration[k];
       cityChart->setTitle(
           string("Pop division: ")+to_string(popDivision[k])+
           string(" [D:")+ssac.str()+
@@ -172,10 +172,10 @@ int main() {
     double mutRate=0.5; float sum;
     unique_ptr<FindTravelerGA> ga[4];
     vector<vector<float>> points[4];
-    float minFitness[]={0,0,0,0};
+    float minLength[]={0,0,0,0};
     double duration[]={0,0,0,0};
     for (int i=0; i<4; i++) {
-      minFitness[i]=0; duration[i]=0;
+      minLength[i]=0; duration[i]=0;
     }
     int tests=100;
 
@@ -203,9 +203,9 @@ int main() {
         start = chrono::system_clock::now();
         ga[0] = make_unique<FindTravelerGA>(members[0],cities,
             string("cities/cities")+to_string(i)+string(".txt"));
-        ga[0]->evolve(mutRate,popDivision[0],epochs[0],verbose);
+        ga[0]->evolve(mutRate,epochs[0],verbose,popDivision[0]);
         end = chrono::system_clock::now(); seconds = end-start;
-        minFitness[0] += ga[0]->getMinFitness();
+        minLength[0] += ga[0]->getMinFitness();
         duration[0] += seconds.count();
         if (i%25==0) {cout <<i<<"% "; cout.flush();}
       }
@@ -213,15 +213,15 @@ int main() {
 
       points[0] = ga[0]->getOptPoints(); 
       points[0].push_back(points[0][0]);
-      minFitness[0] /= tests;
+      minLength[0] /= tests;
       duration[0] /= tests;
 
       shared_ptr<Plot> cityChart(new Plot());
-      cityChart->addPlotData(points[0], Scalar(255,0,0));
+      cityChart->addPlotData(points[0]);
       cityChart->setTicks(4,4);
       cityChart->setXLabel("X"); cityChart->setYLabel("Y");
       cityChart->setYLabelRotate(false);
-      ssac << minFitness[0]; ssec << duration[0];
+      ssac << minLength[0]; ssec << duration[0];
       cityChart->setTitle(
           string("Genetic TSP ")+
           string("[D:")+ssac.str()+
@@ -237,22 +237,22 @@ int main() {
         tie(points[k],sum) = hullRun(
           string("cities/cities")+to_string(i)+string(".txt"));
         end = chrono::system_clock::now(); seconds = end-start;
-        minFitness[k] += sum;
+        minLength[k] += sum;
         duration[k] += seconds.count();
         if (i%25==0) {cout <<i<<"% "; cout.flush();}
       }
       cout << "100%\n";
 
       points[k].push_back(points[k][0]);
-      minFitness[k] /= tests;
+      minLength[k] /= tests;
       duration[k] /= tests;
 
       shared_ptr<Plot> cityChart(new Plot());
-      cityChart->addPlotData(points[k], Scalar(255,0,0));
+      cityChart->addPlotData(points[k]);
       cityChart->setTicks(4,4);
       cityChart->setXLabel("X"); cityChart->setYLabel("Y");
       cityChart->setYLabelRotate(false);
-      ssac << minFitness[k]; ssec << duration[k];
+      ssac << minLength[k]; ssec << duration[k];
       cityChart->setTitle(
           string("Convex Hull TSP ")+
           string("[D:")+ssac.str()+
@@ -268,22 +268,22 @@ int main() {
         tie(points[k],sum) = mstRun(
             string("cities/cities")+to_string(i)+string(".txt"));
         end = chrono::system_clock::now(); seconds = end-start;
-        minFitness[k] += sum;
+        minLength[k] += sum;
         duration[k] += seconds.count();
         if (i%25==0) {cout <<i<<"% "; cout.flush();}
       }
       cout << "100%\n";
 
       points[k].push_back(points[k][0]);
-      minFitness[k] /= tests;
+      minLength[k] /= tests;
       duration[k] /= tests;
 
       shared_ptr<Plot> cityChart(new Plot());
-      cityChart->addPlotData(points[k], Scalar(255,0,0));
+      cityChart->addPlotData(points[k]);
       cityChart->setTicks(4,4);
       cityChart->setXLabel("X"); cityChart->setYLabel("Y");
       cityChart->setYLabelRotate(false);
-      ssac << minFitness[k]; ssec << duration[k];
+      ssac << minLength[k]; ssec << duration[k];
       cityChart->setTitle(
           string("Minimum ST TSP ")+
           string("[D:")+ssac.str()+

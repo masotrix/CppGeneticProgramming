@@ -19,7 +19,6 @@ class Plot {
     Plot();
 
     void addPlotData(std::vector<std::vector<float>> X,
-        const cv::Scalar &color = cv::Scalar(0,0,255),
         bool style = true);
 
     void setTicks(int x, int y);
